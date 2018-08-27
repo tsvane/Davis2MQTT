@@ -14,6 +14,7 @@ namespace Davis2Mqtt
             string MqttBasePath = ConfigurationManager.AppSettings["MqttBasePath"].ToString();
             string SerialPortName = ConfigurationManager.AppSettings["SerialPortName"].ToString();
             int UpdateIntervalSeconds = Convert.ToInt32(ConfigurationManager.AppSettings["UpdateIntervalSeconds"]);
+            bool OnlyPublishIfUpdated = Convert.ToBoolean(ConfigurationManager.AppSettings["OnlyPublishIfUpdated"]);
 
             // Create MQTT object
             MqttHandler mqttHandler = null;
@@ -56,11 +57,10 @@ namespace Davis2Mqtt
 
                 foreach(WeatherDataItem weatherDataItem in weatherData.WeatherDataItems)
                 {
-                    if (weatherDataItem.Published == false)
-                        weatherDataItem.Published = true;
-                    else
+                    if (weatherDataItem.Published && OnlyPublishIfUpdated)
                         continue;
 
+                    weatherDataItem.Published = true;
                     Console.WriteLine("[{0}] INFO:    Publishing {1} Value {2} (RawValue {3})", DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss"), weatherDataItem.Name, weatherDataItem.Value, weatherDataItem.RawValue);
                     mqttHandler.Publish(weatherDataItem.Name, weatherDataItem.Value);
                 }

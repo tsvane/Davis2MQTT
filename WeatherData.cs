@@ -16,7 +16,8 @@ namespace Davis2Mqtt
             WeatherDataItems.Add(new WeatherDataItem("OutsideTemperature", DataType.TEMP));
             WeatherDataItems.Add(new WeatherDataItem("WindSpeed", DataType.WIND));
             WeatherDataItems.Add(new WeatherDataItem("WindSpeed10MinAvg", DataType.WIND));
-            WeatherDataItems.Add(new WeatherDataItem("WindDirection", DataType.DIRECTION));
+            WeatherDataItems.Add(new WeatherDataItem("WindDirectionNamed", DataType.DIRECTION));
+            WeatherDataItems.Add(new WeatherDataItem("WindDirection", DataType.OTHER));
             //WeatherDataItems.Add(new WeatherDataItem("ExtraTemperatures", DataType.TEMP));
             //WeatherDataItems.Add(new WeatherDataItem("SoilTemperatures", DataType.TEMP));
             //WeatherDataItems.Add(new WeatherDataItem("LeafTemperatures", DataType.TEMP));
@@ -62,6 +63,7 @@ namespace Davis2Mqtt
             WeatherDataItems.Find(x => x.Name == "OutsideTemperature").RawValueUpdate(weatherLoopData.OutsideTemperature);
             WeatherDataItems.Find(x => x.Name == "WindSpeed").RawValueUpdate(weatherLoopData.WindSpeed);
             WeatherDataItems.Find(x => x.Name == "WindSpeed10MinAvg").RawValueUpdate(weatherLoopData.WindSpeed10MinAvg);
+            WeatherDataItems.Find(x => x.Name == "WindDirectionNamed").RawValueUpdate(weatherLoopData.WindDirection);
             WeatherDataItems.Find(x => x.Name == "WindDirection").RawValueUpdate(weatherLoopData.WindDirection);
             WeatherDataItems.Find(x => x.Name == "OutsideHumidity").RawValueUpdate(weatherLoopData.OutsideHumidity);
             WeatherDataItems.Find(x => x.Name == "RainRate").RawValueUpdate(weatherLoopData.RainRate);
@@ -165,9 +167,9 @@ namespace Davis2Mqtt
             get
             {
                 if (RawValue.ToString() == string.Empty)
-                    return "0";
+                    return "";
 
-                return Math.Round(((Convert.ToSingle(RawValue) - 32) * 5 / 9), 2).ToString();
+                return Math.Round(((Convert.ToSingle(RawValue) - 32) * 5 / 9), 1).ToString();
             }
         }
 
@@ -176,9 +178,9 @@ namespace Davis2Mqtt
             get
             {
                 if (RawValue.ToString() == string.Empty)
-                    return "0";
+                    return "";
 
-                return Math.Round((Convert.ToSingle(RawValue) * 0.44704f), 2).ToString();
+                return Math.Round((Convert.ToSingle(RawValue) * 0.44704f), 1).ToString();
             }
         }
 
@@ -189,7 +191,7 @@ namespace Davis2Mqtt
                 if (RawValue.ToString() == string.Empty)
                     return "";
 
-                return Math.Round((Convert.ToSingle(RawValue) * 33.8639f), 2).ToString();
+                return Math.Round((Convert.ToSingle(RawValue) * 33.8639f), 1).ToString();
             }
         }
 
@@ -200,7 +202,7 @@ namespace Davis2Mqtt
                 if (RawValue.ToString() == string.Empty)
                     return "";
 
-                return Math.Round((Convert.ToSingle(RawValue) * .2f), 2).ToString(); // Not inches but "clicks"
+                return Math.Round((Convert.ToSingle(RawValue) * .2f), 1).ToString(); // Not inches but "clicks"
             }
         }
     }
